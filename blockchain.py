@@ -2,7 +2,7 @@ import datetime
 import hashlib
 import json
 from flask import Flask, jsonify
-
+# request through post man 
 
 class Blockchain:
     
