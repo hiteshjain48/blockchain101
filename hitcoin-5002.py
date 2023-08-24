@@ -87,12 +87,12 @@ class Blockchain:
         return False
       
 
-
 app = Flask(__name__)
 
 node_address = str(uuid4()).replace('-', '')
 
 blockchain = Blockchain()
+
 
 @app.route('/mine_block', methods=['GET'])
 def mine_block():
@@ -102,8 +102,6 @@ def mine_block():
     previous_hash = blockchain.hash(previous_block)
     blockchain.add_transaction(node_address, 'Pratham', 1)
     block = blockchain.create_block(proof,previous_hash)
-  
-    
     response = {'index' : block['index'],
                 'message' : 'You have successfully mined a block!!',
                 'timestamp' : block['timestamp'],
@@ -112,12 +110,14 @@ def mine_block():
                 'transactions' : block["transactions"]}
     return jsonify(response), 200
 
+
 @app.route('/get_chain', methods=['GET'])
 def get_chain():  
     response = {'length' : len(blockchain.chain),
                 'chain' : blockchain.chain}
     return jsonify(response), 200
-                            
+
+
 @app.route('/is_valid', methods=['GET'])
 def is_valid():
     is_valid = blockchain.is_chain_valid(blockchain.chain)
@@ -126,6 +126,7 @@ def is_valid():
     else:
         response = {'message' : 'The chain is invalid.'}
     return jsonify(response), 200
+
 
 @app.route('/add_transaction', methods = ['POST'])
 def add_transaction():
@@ -136,6 +137,7 @@ def add_transaction():
     index = blockchain.add_transaction(json['sender'], json['receiver'], json['amount'])
     response = {'message' : f'This transaction will be added to Block {index}'}
     return jsonify(response), 201
+
 
 @app.route('/connect_node', methods = ['POST'])
 def connect_node():
@@ -149,15 +151,16 @@ def connect_node():
                 'total_nodes' : list(blockchain.nodes)}
     return jsonify(response), 201
 
+
 @app.route('/replace_chain', methods = ['GET'])
 def replace_chain():
     is_chain_replaced = blockchain.replace_chain()
     if is_chain_replaced:
-        response = {'message':'The nodes had different chaiins so the chain was replaced by the longest one',
+        response = {'message':'The nodes had different chains so the chain was replaced by the longest one',
                     'new_chain':blockchain.chain}
     else:
         response = {'message':'All good. The chain is the largest one.',
                     'actual_chain':blockchain.chain}
     return jsonify(response), 201
     
-app.run(host='127.0.0.1',port= 5002)                  
+app.run(host='127.0.0.1',port= 5002)
