@@ -2,7 +2,6 @@ import datetime
 import hashlib
 import json
 from flask import Flask, jsonify
-# request through post man 
 
 
 class Blockchain:
@@ -32,7 +31,7 @@ class Blockchain:
             else:
                 new_proof += 1
         return new_proof
-    
+
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
@@ -54,10 +53,10 @@ class Blockchain:
         return True
     
 
-
 app = Flask(__name__)
 
 blockchain = Blockchain()
+
 
 @app.route('/mine_block', methods=['GET'])
 def mine_block():
@@ -72,6 +71,7 @@ def mine_block():
                 'previous_hash' : block['previous_hash'],
                 'proof' : block['proof']}
     return jsonify(response), 200
+
 
 @app.route('/get_chain', methods=['GET'])
 def get_chain():
